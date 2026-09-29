@@ -6,7 +6,7 @@ interface GmailHeader {
   value: string;
 }
 
-function inferCategory(fromHeader: string, subject: string, labels: string[] = []): SmartFilterCategory {
+function inferCategory(fromHeader: string, subject: string, labels: string[] = []): MessageMetadata['category'] {
   if (labels.includes('CATEGORY_PROMOTIONS') || /sale|deal|discount|offer/i.test(subject)) {
     return 'Promotions';
   }
