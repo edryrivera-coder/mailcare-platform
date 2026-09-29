@@ -1,0 +1,25 @@
+# ============================================================================
+# MAILCARE SECURITY ZONE NETWORK POLICIES (Sec. 44: Public -> App -> Worker -> Data)
+# ============================================================================
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: data-zone-strict-isolation
+  namespace: data-zone
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              mailcare.io/security-zone: application-zone
+        - namespaceSelector:
+            matchLabels:
+              mailcare.io/security-zone: worker-zone
+      ports:
+        - protocol: TCP
+          port: 5432
+        - protocol: TCP
+          port: 6379

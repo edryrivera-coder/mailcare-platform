@@ -1,0 +1,18 @@
+{
+  "name": "MailCare — Cleaner Inboxes. Healthier Data.",
+  "short_name": "MailCare",
+  "description": "Offline-capable Consumer Inbox Management & Enterprise B2B Email Verification Platform",
+  "start_url": "/dashboard",
+  "display": "standalone",
+  "background_color": "#060608",
+  "theme_color": "#eab95c",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

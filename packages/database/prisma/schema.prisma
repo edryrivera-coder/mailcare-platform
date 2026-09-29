@@ -1,0 +1,374 @@
+// ============================================================================
+// MAILCARE POSTGRESQL MULTI-TENANT SCHEMA (Sec. 23, 34, 36, 37, NFA-12..22, NFA-52..53)
+// ============================================================================
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 1. organizations (Tenant Root - Sec. 37, NFA-22)
+model Organization {
+  id                  String               @id @default(cuid())
+  name                String
+  slug                String               @unique
+  plan                String               @default("ENTERPRISE")
+  isolationLevel      String               @default("RLS_ENFORCED") @map("isolation_level")
+  createdAt           DateTime             @default(now()) @map("created_at")
+  updatedAt           DateTime             @updatedAt @map("updated_at")
+  users               User[]
+  accounts            Account[]
+  subscriptions       Subscription[]
+  mailboxes           Mailbox[]
+  jobs                Job[]
+  contacts            Contact[]
+  verificationResults VerificationResult[]
+  apiKeys             ApiKey[]
+  webhooks            Webhook[]
+  integrations        Integration[]
+  auditEvents         AuditEvent[]
+
+  @@map("organizations")
+}
+
+// 2. users (Application Users - Sec. 5, 23)
+model User {
+  id               String            @id @default(cuid())
+  organizationId   String            @map("organization_id")
+  email            String            @unique
+  fullName         String            @map("full_name")
+  role             String            @default("Administrator")
+  twoFactorEnabled Boolean           @default(true) @map("two_factor_enabled")
+  language         String            @default("English (US)")
+  timeZone         String            @default("(GMT+08:00) Manila") @map("time_zone")
+  lastLoginAt      DateTime?         @map("last_login_at")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  organization     Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  accounts         Account[]
+  oauthConnections OAuthConnection[]
+  mailboxes        Mailbox[]
+
+  @@index([organizationId])
+  @@map("users")
+}
+
+// 3. accounts (Billing & Quota Accounts - Sec. 23)
+model Account {
+  id                     String       @id @default(cuid())
+  organizationId         String       @map("organization_id")
+  ownerUserId            String       @map("owner_user_id")
+  accountType            String       @default("HYBRID_CONSUMER_ENTERPRISE") @map("account_type")
+  monthlyVerifyQuota     Int          @default(5000000) @map("monthly_verify_quota")
+  monthlyVerifyUsed      Int          @default(2847392) @map("monthly_verify_used")
+  rateLimitPerMinute     Int          @default(100) @map("rate_limit_per_minute")
+  zeroDataBrokerageOptIn Boolean      @default(true) @map("zero_data_brokerage_opt_in") // NFA-21
+  createdAt              DateTime     @default(now()) @map("created_at")
+  organization           Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  ownerUser              User         @relation(fields: [ownerUserId], references: [id])
+
+  @@index([organizationId])
+  @@map("accounts")
+}
+
+// 4. subscriptions (Plan & Configurable Retention Policies - Sec. 23, NFA-46)
+model Subscription {
+  id                         String       @id @default(cuid())
+  organizationId             String       @map("organization_id")
+  planCode                   String       @default("ENTERPRISE_PRO") @map("plan_code")
+  status                     String       @default("ACTIVE")
+  auditRetentionDays         Int          @default(365) @map("audit_retention_days")        // NFA-46
+  batchArtifactRetentionDays Int          @default(7) @map("batch_artifact_retention_days") // NFA-13, NFA-46
+  tempResultRetentionDays    Int          @default(14) @map("temp_result_retention_days")   // NFA-46
+  currentPeriodEnd           DateTime     @map("current_period_end")
+  createdAt                  DateTime     @default(now()) @map("created_at")
+  organization               Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("subscriptions")
+}
+
+// 5. oauth_connections (Delegated OAuth Only; Zero Password Storage - Sec. 5, NFA-15, NFA-17, NFA-18)
+model OAuthConnection {
+  id                    String    @id @default(cuid())
+  organizationId        String    @map("organization_id")
+  userId                String    @map("user_id")
+  provider              String    // gmail | microsoft365 | outlook | yahoo
+  providerAccountId     String    @map("provider_account_id")
+  encryptedRefreshToken String    @map("encrypted_refresh_token") // KMS/HSM Envelope Encrypted
+  kmsKeyArn             String    @map("kms_key_arn")
+  scopes                String[]
+  status                String    @default("CONNECTED") // CONNECTED | REVOKED | EXPIRED
+  expiresAt             DateTime? @map("expires_at")
+  createdAt             DateTime  @default(now()) @map("created_at")
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider, providerAccountId])
+  @@index([organizationId])
+  @@map("oauth_connections")
+}
+
+// 6. mailboxes (Connected Consumer Mailboxes - Sec. 6, 7, NFA-47)
+model Mailbox {
+  id               String            @id @default(cuid())
+  organizationId   String            @map("organization_id")
+  userId           String            @map("user_id")
+  emailAddress     String            @map("email_address")
+  provider         String            // gmail | microsoft365 | outlook | yahoo
+  syncState        String            @default("SYNCED") @map("sync_state") // SYNCING | SYNCED | DEGRADED (NFA-47)
+  syncCursor       String?           @map("sync_cursor")
+  totalMessages    Int               @default(0) @map("total_messages")
+  unreadMessages   Int               @default(0) @map("unread_messages")
+  archivedMessages Int               @default(0) @map("archived_messages")
+  deletedMessages  Int               @default(0) @map("deleted_messages")
+  storageRecovered BigInt            @default(0) @map("storage_recovered") // Bytes reclaimed (Sec. 33)
+  lastSyncedAt     DateTime?         @map("last_synced_at")
+  createdAt        DateTime          @default(now()) @map("created_at")
+  organization     Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  user             User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  threads          Thread[]
+  messagesMetadata MessageMetadata[]
+  rules            Rule[]
+
+  @@index([organizationId, userId])
+  @@map("mailboxes")
+}
+
+// 7. threads (Conversation Thread Grouping & Size Indexing - Sec. 7, 23)
+model Thread {
+  id             String            @id @default(cuid())
+  organizationId String            @map("organization_id")
+  mailboxId      String            @map("mailbox_id")
+  providerThread String            @map("provider_thread_id")
+  messageCount   Int               @default(1) @map("message_count")
+  totalSizeBytes Int               @default(0) @map("total_size_bytes")
+  lastMessageAt  DateTime          @map("last_message_at")
+  mailbox        Mailbox           @relation(fields: [mailboxId], references: [id], onDelete: Cascade)
+  messages       MessageMetadata[]
+
+  @@index([mailboxId, totalSizeBytes])
+  @@map("threads")
+}
+
+// 8. messages_metadata (Ephemeral/Metadata-Only Consumer Discovery - Sec. 7, NFA-14)
+// NOTE: Raw email body is strictly omitted by design (NFA-14 & Sec. 28)
+model MessageMetadata {
+  messageId          String   @id @map("message_id")
+  organizationId     String   @map("organization_id")
+  mailboxId          String   @map("mailbox_id")
+  providerId         String   @map("provider_id")
+  threadId           String   @map("thread_id")
+  senderName         String   @map("sender_name")
+  senderEmail        String   @map("sender_email")
+  senderDomain       String   @map("sender_domain")
+  subjectSummary     String   @map("subject_summary")
+  recipientCount     Int      @default(1) @map("recipient_count")
+  timestamp          DateTime
+  messageSize        Int      @map("message_size")
+  labels             String[]
+  hasListUnsubscribe Boolean  @default(false) @map("has_list_unsubscribe")
+  unsubscribeMethod  String?  @map("unsubscribe_method") // RFC8058_HTTP_POST | HTTPS_URL | MAILTO
+  classification     String   // Inbox | Newsletters | Promotions | Social | Updates | Forums
+  confidenceScore    Float    @default(1.0) @map("confidence_score") // NFA-49 probabilistic AI triage
+  riskScore          Float    @default(0.0) @map("risk_score")
+  trackersBlocked    Int      @default(0) @map("trackers_blocked")   // Sec. 12
+  isUnread           Boolean  @default(false) @map("is_unread")
+  isArchived         Boolean  @default(false) @map("is_archived")
+  isQuarantined      Boolean  @default(false) @map("is_quarantined")
+  snoozedUntil       DateTime? @map("snoozed_until")
+  createdAt          DateTime @default(now()) @map("created_at")
+  mailbox            Mailbox  @relation(fields: [mailboxId], references: [id], onDelete: Cascade)
+  thread             Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  @@index([mailboxId, senderDomain])
+  @@index([mailboxId, classification])
+  @@index([mailboxId, timestamp])
+  @@index([mailboxId, messageSize])
+  @@map("messages_metadata")
+}
+
+// 9. rules (Structured Deterministic Filtering Rules - Sec. 11, 23)
+model Rule {
+  id             String   @id @default(cuid())
+  organizationId String   @map("organization_id")
+  mailboxId      String   @map("mailbox_id")
+  name           String
+  conditions     Json     // Array<{ field, operator, value }>
+  actions        Json     // Array<{ type: 'archive' | 'delete' | 'unsubscribe' | 'quarantine' }>
+  priority       Int      @default(100)
+  enabled        Boolean  @default(true)
+  executedCount  Int      @default(0) @map("executed_count")
+  createdAt      DateTime @default(now()) @map("created_at")
+  mailbox        Mailbox  @relation(fields: [mailboxId], references: [id], onDelete: Cascade)
+
+  @@index([mailboxId, enabled])
+  @@map("rules")
+}
+
+// 10. jobs (Checkpointed Asynchronous Batch Jobs - Sec. 9, 21, 22, NFA-04, NFA-10, NFA-11, NFA-44)
+model Job {
+  id               String       @id @default(cuid())
+  organizationId   String       @map("organization_id")
+  jobCode          String       @unique @map("job_code") // e.g., BJ-2025-00123
+  workloadDomain   String       @map("workload_domain")  // CONSUMER | ENTERPRISE (NFA-05)
+  queueName        String       @map("queue_name")       // e.g., enterprise.syntax, consumer.mutations
+  type             String       // Bulk Verification | Inbox Cleanup | CRM Sync | Verification | Hygiene Job
+  status           String       // Running | Completed | Failed | Paused
+  totalItems       Int          @default(0) @map("total_items")
+  completedItems   Int          @default(0) @map("completed_items")
+  failedItems      Int          @default(0) @map("failed_items")
+  checkpointCursor Int          @default(0) @map("checkpoint_cursor") // NFA-11 restartable offset
+  idempotencyKey   String?      @unique @map("idempotency_key")       // NFA-10
+  inputObjectKey   String?      @map("input_object_key")              // S3 key for uploaded CSV/XLSX
+  exportObjectKey  String?      @map("export_object_key")             // S3 key for result export
+  lastErrorCode    String?      @map("last_error_code")
+  createdAt        DateTime     @default(now()) @map("created_at")
+  completedAt      DateTime?    @map("completed_at")
+  organization     Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  items            JobItem[]
+
+  @@index([organizationId, status])
+  @@index([organizationId, workloadDomain])
+  @@map("jobs")
+}
+
+// 11. job_items (10,000-Record Partition Work Units & DLQ Tracking - Sec. 23, 31, NFA-08, NFA-09)
+model JobItem {
+  id             String    @id @default(cuid())
+  organizationId String    @map("organization_id")
+  jobId          String    @map("job_id")
+  partitionIndex Int       @map("partition_index")
+  startOffset    Int       @map("start_offset") // e.g. 450001
+  endOffset      Int       @map("end_offset")   // e.g. 460000
+  status         String    @default("QUEUED")   // QUEUED | PROCESSING | COMPLETED | RETRYING | DLQ
+  attempts       Int       @default(0)
+  maxAttempts    Int       @default(5) @map("max_attempts")
+  nextRetryAt    DateTime? @map("next_retry_at")
+  dlqReason      String?   @map("dlq_reason")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  job            Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, partitionIndex])
+  @@index([organizationId, status])
+  @@map("job_items")
+}
+
+// 12. verification_results (Immutable Versioned Verification Evidence - Sec. 19, 23, NFA-32, NFA-52)
+model VerificationResult {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  jobId          String?      @map("job_id")
+  email          String
+  version        Int          @default(1) // NFA-52: Re-verification creates a new version, never overwrites
+  status         String       // DELIVERABLE | UNDELIVERABLE | RISKY | UNKNOWN
+  score          Float        // 0.0 - 10.0
+  riskScore100   Int          @default(5) @map("risk_score_100")
+  domainExists   Boolean      @map("domain_exists")
+  mxValid        Boolean      @map("mx_valid")
+  catchAll       Boolean      @map("catch_all")
+  smtpStatus     String       @map("smtp_status") // accepted | rejected | greylisted | timeout
+  disposable     Boolean      @default(false)
+  roleAccount    Boolean      @default(false) @map("role_account")
+  spamTrap       Boolean      @default(false) @map("spam_trap")
+  durationMs     Int          @map("duration_ms")
+  engineVersion  String       @default("1.0.0") @map("engine_version")
+  modelVersion   String?      @map("model_version")   // NFA-32
+  featureVersion String?      @map("feature_version") // NFA-32
+  scoringVersion String?      @map("scoring_version") // NFA-32
+  createdAt      DateTime     @default(now()) @map("created_at")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, email, version])
+  @@index([organizationId, status])
+  @@map("verification_results")
+}
+
+// 13. contacts (Enterprise Hygiene Contact Records - Sec. 37, 39)
+model Contact {
+  id                   String       @id @default(cuid())
+  organizationId       String       @map("organization_id")
+  email                String
+  externalCrmId        String?      @map("external_crm_id")
+  sourceProvider       String?      @map("source_provider") // salesforce | hubspot | mailchimp
+  latestVerificationId String?      @map("latest_verification_id")
+  latestStatus         String       @default("UNKNOWN") @map("latest_status")
+  suppressed           Boolean      @default(false)
+  updatedAt            DateTime     @updatedAt @map("updated_at")
+  organization         Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, email])
+  @@map("contacts")
+}
+
+// 14. api_keys (Scoped Enterprise API Keys - Sec. 4.1, 23, NFA-18, NFA-53)
+model ApiKey {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  name           String
+  keyPrefix      String       @map("key_prefix") // e.g. mc_live_98a7
+  keySha256Hash  String       @unique @map("key_sha256_hash")
+  scopes         String[]     // ["verify:realtime", "verify:batch", "webhooks:manage"]
+  rateLimitRpm   Int          @default(600) @map("rate_limit_rpm")
+  lastUsedAt     DateTime?    @map("last_used_at")
+  revokedAt      DateTime?    @map("revoked_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("api_keys")
+}
+
+// 15. webhooks (At-Least-Once HMAC Webhook Subscriptions - Sec. 26, NFA-37)
+model Webhook {
+  id             String       @id @default(cuid())
+  organizationId String       @map("organization_id")
+  targetUrl      String       @map("target_url")
+  hmacSecretKms  String       @map("hmac_secret_kms")
+  subscribedTo   String[]     @map("subscribed_to")
+  enabled        Boolean      @default(true)
+  failureCount   Int          @default(0) @map("failure_count")
+  lastDeliveryAt DateTime?    @map("last_delivery_at")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@map("webhooks")
+}
+
+// 16. integrations (CRM & ESP Connectors - Sec. 25, NFA-35, NFA-36)
+model Integration {
+  id                    String       @id @default(cuid())
+  organizationId        String       @map("organization_id")
+  provider              String       // salesforce | hubspot | marketo | mailchimp | sendgrid | convertkit | klaviyo
+  status                String       @default("CONNECTED")
+  encryptedCredentials  String       @map("encrypted_credentials") // KMS encrypted
+  syncScheduleCron      String?      @map("sync_schedule_cron")
+  lastSyncedAt          DateTime?    @map("last_synced_at")
+  createdAt             DateTime     @default(now()) @map("created_at")
+  organization          Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([organizationId, provider])
+  @@map("integrations")
+}
+
+// 17. audit_events (Append-Only Immutable Audit Log - Sec. 34, NFA-53)
+model AuditEvent {
+  eventId        String       @id @default(cuid()) @map("event_id")
+  organizationId String       @map("organization_id")
+  actorId        String       @map("actor_id")
+  action         String       // BULK_DELETE | UNSUBSCRIBE_ATTEMPT | API_KEY_CREATED | API_KEY_REVOKED | JOB_CANCELLED
+  resource       String
+  resourceId     String       @map("resource_id")
+  result         String       // SUCCESS | FAILURE
+  correlationId  String       @map("correlation_id") // NFA-38
+  metadata       Json?
+  timestamp      DateTime     @default(now())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId, timestamp])
+  @@index([organizationId, action])
+  @@map("audit_events")
+}

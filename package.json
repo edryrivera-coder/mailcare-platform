@@ -1,0 +1,20 @@
+{
+  "name": "mailcare-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "MailCare — Cloud-native, API-first Email Cleaning & Data Hygiene Platform",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm --workspace=apps/web run dev",
+    "build": "npm --workspace=apps/web run build",
+    "start": "npm --workspace=apps/web run start",
+    "lint": "npm --workspace=apps/web run lint",
+    "test": "node --test tests/run-all-acceptance.spec.mjs"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
