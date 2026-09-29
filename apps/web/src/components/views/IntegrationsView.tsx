@@ -88,11 +88,11 @@ export function IntegrationsView({ compact = false }: { compact?: boolean }) {
   return (
     <div className="space-y-4">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-[#d8a84e]/20">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-1 border-b border-[#d8a84e]/20">
+        <div className="min-w-0">
           <h1
             className={`${
-              compact ? 'text-xl' : 'text-2xl sm:text-3xl'
+              compact ? 'text-xl' : 'text-xl sm:text-3xl'
             } font-bold text-[#fff8eb] tracking-tight`}
           >
             Integrations
@@ -102,13 +102,13 @@ export function IntegrationsView({ compact = false }: { compact?: boolean }) {
           </p>
 
           {/* Sub-navigation Tabs */}
-          <div className="flex flex-wrap items-center gap-1 mt-4 p-1 rounded-xl bg-[#12100d] border border-[#d8a84e]/25">
+          <div className="flex items-center gap-1 mt-3 sm:mt-4 p-1 rounded-xl bg-[#12100d] border border-[#d8a84e]/25 overflow-x-auto no-scrollbar max-w-full w-fit">
             {INTEGRATION_TABS.map((tab) => (
               <button
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                className={`px-3 sm:px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                   activeTab === tab
                     ? 'gold-tab-active font-semibold'
                     : 'text-[#c7b99e] hover:text-[#fff8eb]'
@@ -123,16 +123,16 @@ export function IntegrationsView({ compact = false }: { compact?: boolean }) {
       </div>
 
       {/* Connected Primary Mailbox Bar (edryrivera@gmail.com) */}
-      <div className="gold-card px-4 py-3 flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-2.5 text-xs">
-          <div className="w-8 h-8 rounded-lg bg-[#194d33] border border-[#28c76f]/60 flex items-center justify-center">
+      <div className="gold-card px-3.5 sm:px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3">
+        <div className="flex items-center gap-2.5 text-xs min-w-0">
+          <div className="w-8 h-8 rounded-lg bg-[#194d33] border border-[#28c76f]/60 flex items-center justify-center shrink-0">
             <Mail className="w-4 h-4 text-[#4be38d]" />
           </div>
-          <div>
-            <span className="text-[#d4c5a9] block text-[11px]">
+          <div className="min-w-0">
+            <span className="text-[#d4c5a9] block text-[11px] truncate">
               Primary Delegated OAuth 2.0 Mailbox (NFA-15 Passwordless)
             </span>
-            <span className="font-bold text-[#fff8eb]">{profile.email}</span>
+            <span className="font-bold text-[#fff8eb] truncate block">{profile.email}</span>
           </div>
         </div>
 
@@ -143,7 +143,7 @@ export function IntegrationsView({ compact = false }: { compact?: boolean }) {
               setMailboxInput(profile.email);
               setIsEditingMailbox(true);
             }}
-            className="gold-btn-outline px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1.5 cursor-pointer"
+            className="gold-btn-outline px-3 py-1.5 rounded-lg text-xs inline-flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
           >
             <Edit3 className="w-3.5 h-3.5 text-[#eab95c]" />
             <span>Change / Edit Linked Email</span>
@@ -151,7 +151,7 @@ export function IntegrationsView({ compact = false }: { compact?: boolean }) {
         ) : (
           <form
             onSubmit={(e) => void handleSaveLinkedMailbox(e)}
-            className="flex items-center gap-2"
+            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto"
           >
             <input
               type="email"
@@ -160,20 +160,22 @@ export function IntegrationsView({ compact = false }: { compact?: boolean }) {
               onChange={(e) => setMailboxInput(e.target.value)}
               className="gold-card-inset rounded-lg px-3 py-1.5 text-xs text-[#fff8eb] focus:outline-none focus:border-[#eab95c]"
             />
-            <button
-              type="submit"
-              className="gold-btn px-3 py-1.5 rounded-lg text-xs inline-flex items-center gap-1 cursor-pointer"
-            >
-              <Check className="w-3.5 h-3.5" />
-              Link Email
-            </button>
-            <button
-              type="button"
-              onClick={() => setIsEditingMailbox(false)}
-              className="text-xs text-[#d4c5a9] hover:text-white cursor-pointer"
-            >
-              Cancel
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="submit"
+                className="gold-btn flex-1 sm:flex-initial px-3 py-1.5 rounded-lg text-xs inline-flex items-center justify-center gap-1 cursor-pointer"
+              >
+                <Check className="w-3.5 h-3.5" />
+                Link Email
+              </button>
+              <button
+                type="button"
+                onClick={() => setIsEditingMailbox(false)}
+                className="text-xs text-[#d4c5a9] hover:text-white px-2 cursor-pointer"
+              >
+                Cancel
+              </button>
+            </div>
           </form>
         )}
       </div>

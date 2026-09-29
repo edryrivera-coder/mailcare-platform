@@ -77,17 +77,19 @@ export default function ExecutiveDashboardPage() {
   return (
     <div className="space-y-6">
       {/* Above-the-Fold High-Converting Value Hero & Activation Funnel */}
-      <div className="gold-card p-5 sm:p-6 relative overflow-hidden">
-        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#194d33]/55 border border-[#28c76f]/50 text-xs text-[#6ce8a0] font-medium">
-              <CheckCircle2 className="w-3.5 h-3.5 text-[#28c76f]" />
-              <span>
-                Primary OAuth 2.0 Mailbox Active: <strong>{profile.email}</strong>
+      <div className="gold-card p-4 sm:p-6 relative overflow-hidden">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-5">
+          <div className="space-y-2 max-w-2xl min-w-0">
+            <div className="inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1 rounded-full bg-[#194d33]/55 border border-[#28c76f]/50 text-[11px] sm:text-xs text-[#6ce8a0] font-medium max-w-full">
+              <CheckCircle2 className="w-3.5 h-3.5 text-[#28c76f] shrink-0" />
+              <span className="truncate">
+                <span className="hidden sm:inline">Primary OAuth 2.0 Mailbox Active: </span>
+                <span className="sm:hidden">Linked: </span>
+                <strong>{profile.email}</strong>
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-[#fff8eb] tracking-tight">
+            <h1 className="text-xl sm:text-3xl font-extrabold text-[#fff8eb] tracking-tight leading-tight">
               Welcome back, <span className="gold-text-gradient">{profile.fullName}</span>
             </h1>
             <p className="text-xs sm:text-sm text-[#dfd3bc] leading-relaxed">
@@ -98,93 +100,108 @@ export default function ExecutiveDashboardPage() {
           </div>
 
           {/* Primary High-Contrast Conversion CTAs */}
-          <div className="flex flex-wrap items-center gap-3 shrink-0">
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-2.5 sm:gap-3 w-full lg:w-auto shrink-0">
             <Link
               href="/email-verification"
-              className="gold-btn px-5 py-2.5 rounded-xl text-xs sm:text-sm flex items-center gap-2"
+              className="gold-btn px-3 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm flex items-center justify-center gap-1.5 sm:gap-2 text-center"
             >
-              <Zap className="w-4 h-4" />
-              <span>Verify Emails Now</span>
+              <Zap className="w-4 h-4 shrink-0" />
+              <span>Verify Emails</span>
             </Link>
             <Link
               href="/consumer-inbox"
-              className="gold-btn-outline px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2"
+              className="gold-btn-outline px-3 sm:px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold flex items-center justify-center gap-1.5 sm:gap-2 text-center"
             >
-              <Inbox className="w-4 h-4 text-[#eab95c]" />
+              <Inbox className="w-4 h-4 text-[#eab95c] shrink-0" />
               <span>Clean 342 Unread</span>
             </Link>
           </div>
         </div>
 
         {/* 3-Step Guided Activation Progress Bar */}
-        <div className="mt-5 pt-4 border-t border-[#d8a84e]/20 grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="mt-4 sm:mt-5 pt-3.5 sm:pt-4 border-t border-[#d8a84e]/20 grid grid-cols-1 md:grid-cols-3 gap-2.5 sm:gap-3">
           <Link
             href="/integrations"
             className="gold-card-inset p-3 rounded-xl flex items-center justify-between border-[#28c76f]/40 hover:border-[#28c76f] transition"
           >
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-6 rounded-full bg-[#194d33] text-[#4be38d] flex items-center justify-center text-xs font-bold">
+            <div className="flex items-center gap-2.5 min-w-0 pr-2">
+              <div className="w-6 h-6 rounded-full bg-[#194d33] text-[#4be38d] flex items-center justify-center text-xs font-bold shrink-0">
                 ✓
               </div>
-              <div>
-                <div className="text-xs font-bold text-[#fff8eb]">1. Link OAuth 2.0 Mailbox</div>
-                <div className="text-[11px] text-[#6ce8a0]">{profile.email} connected</div>
+              <div className="min-w-0">
+                <div className="text-xs font-bold text-[#fff8eb] truncate">
+                  1. Link OAuth 2.0 Mailbox
+                </div>
+                <div className="text-[11px] text-[#6ce8a0] truncate">
+                  {profile.email} connected
+                </div>
               </div>
             </div>
-            <span className="text-[10.5px] font-semibold text-[#6ce8a0]">Done</span>
+            <span className="text-[10.5px] font-semibold text-[#6ce8a0] shrink-0">Done</span>
           </Link>
 
           <Link
             href="/consumer-inbox"
             className="gold-card-inset p-3 rounded-xl flex items-center justify-between hover:border-[#eab95c] transition group"
           >
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-6 rounded-full bg-[#d8a84e]/20 border border-[#eab95c] text-[#f5d07e] flex items-center justify-center text-xs font-bold">
+            <div className="flex items-center gap-2.5 min-w-0 pr-2">
+              <div className="w-6 h-6 rounded-full bg-[#d8a84e]/20 border border-[#eab95c] text-[#f5d07e] flex items-center justify-center text-xs font-bold shrink-0">
                 2
               </div>
-              <div>
-                <div className="text-xs font-bold text-[#fff8eb]">2. Triage Newsletter Clutter</div>
-                <div className="text-[11px] text-[#d4c5a9]">342 unread • RFC 8058 Ready</div>
+              <div className="min-w-0">
+                <div className="text-xs font-bold text-[#fff8eb] truncate">
+                  2. Triage Newsletter Clutter
+                </div>
+                <div className="text-[11px] text-[#d4c5a9] truncate">
+                  342 unread • RFC 8058 Ready
+                </div>
               </div>
             </div>
-            <ArrowRight className="w-3.5 h-3.5 text-[#eab95c] group-hover:translate-x-0.5 transition" />
+            <ArrowRight className="w-3.5 h-3.5 text-[#eab95c] group-hover:translate-x-0.5 transition shrink-0" />
           </Link>
 
           <Link
             href="/email-verification"
             className="gold-card-inset p-3 rounded-xl flex items-center justify-between hover:border-[#eab95c] transition group"
           >
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-6 rounded-full bg-[#d8a84e]/20 border border-[#eab95c] text-[#f5d07e] flex items-center justify-center text-xs font-bold">
+            <div className="flex items-center gap-2.5 min-w-0 pr-2">
+              <div className="w-6 h-6 rounded-full bg-[#d8a84e]/20 border border-[#eab95c] text-[#f5d07e] flex items-center justify-center text-xs font-bold shrink-0">
                 3
               </div>
-              <div>
-                <div className="text-xs font-bold text-[#fff8eb]">3. Run Bulk CRM Hygiene</div>
-                <div className="text-[11px] text-[#d4c5a9]">Up to 1M rows • 10k partitions</div>
+              <div className="min-w-0">
+                <div className="text-xs font-bold text-[#fff8eb] truncate">
+                  3. Run Bulk CRM Hygiene
+                </div>
+                <div className="text-[11px] text-[#d4c5a9] truncate">
+                  Up to 1M rows • 10k partitions
+                </div>
               </div>
             </div>
-            <ArrowRight className="w-3.5 h-3.5 text-[#eab95c] group-hover:translate-x-0.5 transition" />
+            <ArrowRight className="w-3.5 h-3.5 text-[#eab95c] group-hover:translate-x-0.5 transition shrink-0" />
           </Link>
         </div>
       </div>
 
       {/* 6 Module Launchpad Cards */}
       <div>
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="text-sm font-bold uppercase tracking-wider text-[#d8cab0] flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-[#eab95c]" />
-            Platform Modules &amp; Live Telemetry
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
+          <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wider text-[#d8cab0] flex items-center gap-1.5 sm:gap-2">
+            <Sparkles className="w-4 h-4 text-[#eab95c] shrink-0" />
+            <span>Platform Modules &amp; Live Telemetry</span>
           </h2>
           <button
             type="button"
             onClick={() => setShowSixPanelGrid((v) => !v)}
-            className="gold-btn-outline px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
+            className="gold-btn-outline px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 cursor-pointer"
           >
-            <LayoutGrid className="w-3.5 h-3.5 text-[#eab95c]" />
-            <span>
+            <LayoutGrid className="w-3.5 h-3.5 text-[#eab95c] shrink-0" />
+            <span className="hidden sm:inline">
               {showSixPanelGrid
                 ? 'Hide 6-Panel Architecture Grid'
                 : 'Preview All 6 Screens (dashboard.png 2×3 Grid)'}
+            </span>
+            <span className="sm:hidden">
+              {showSixPanelGrid ? 'Hide 6-Panels' : '6-Panel Grid'}
             </span>
           </button>
         </div>

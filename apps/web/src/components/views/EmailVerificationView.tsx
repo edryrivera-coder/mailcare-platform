@@ -111,9 +111,9 @@ export function EmailVerificationView({ compact = false }: { compact?: boolean }
   return (
     <div className="space-y-5">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-[#d8a84e]/20">
-        <div>
-          <h1 className={`${compact ? 'text-xl' : 'text-2xl sm:text-3xl'} font-bold text-[#fff8eb] tracking-tight`}>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-1 border-b border-[#d8a84e]/20">
+        <div className="min-w-0">
+          <h1 className={`${compact ? 'text-xl' : 'text-xl sm:text-3xl'} font-bold text-[#fff8eb] tracking-tight`}>
             Email Verification
           </h1>
           <p className="text-xs sm:text-sm text-[#d4c5a9] mt-1">
@@ -121,13 +121,13 @@ export function EmailVerificationView({ compact = false }: { compact?: boolean }
           </p>
 
           {/* Sub-navigation Tabs */}
-          <div className="inline-flex items-center gap-1 mt-4 p-1 rounded-xl bg-[#12100d] border border-[#d8a84e]/25">
+          <div className="flex items-center gap-1 mt-3 sm:mt-4 p-1 rounded-xl bg-[#12100d] border border-[#d8a84e]/25 overflow-x-auto no-scrollbar max-w-full w-fit">
             {(['Single Verification', 'Bulk Verification', 'History'] as const).map((tab) => (
               <button
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                className={`px-3 sm:px-4 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                   activeTab === tab
                     ? 'gold-tab-active font-semibold'
                     : 'text-[#c7b99e] hover:text-[#fff8eb]'
@@ -142,14 +142,14 @@ export function EmailVerificationView({ compact = false }: { compact?: boolean }
       </div>
 
       {activeTab === 'Single Verification' && (
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5">
           {/* Left Column: Input Card + Result Card */}
           <div className="lg:col-span-7 space-y-4">
             {/* Verify an Email Address Card */}
-            <div className="gold-card p-5">
-              <div className="flex items-center justify-between mb-3">
+            <div className="gold-card p-4 sm:p-5">
+              <div className="flex items-center justify-between gap-2 mb-3">
                 <h2 className="text-sm font-semibold text-[#f7edd9]">Verify an Email Address</h2>
-                <span className="text-[11px] text-[#d4c5a9] flex items-center gap-1">
+                <span className="text-[11px] text-[#d4c5a9] flex items-center gap-1 shrink-0">
                   <Sparkles className="w-3 h-3 text-[#eab95c]" />
                   SLA &lt;1.0s ({currentResult.processing.durationMs}ms)
                 </span>
@@ -160,19 +160,19 @@ export function EmailVerificationView({ compact = false }: { compact?: boolean }
                   e.preventDefault();
                   void handleVerify();
                 }}
-                className="flex items-center gap-2.5"
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5"
               >
                 <input
                   type="text"
                   value={emailInput}
                   onChange={(e) => setEmailInput(e.target.value)}
-                  placeholder="Enter email address (e.g. edryrivera@gmail.com)..."
+                  placeholder="Enter email address (e.g. john.doe@company.com)..."
                   className="flex-1 gold-card-inset rounded-lg px-3.5 py-2.5 text-sm text-[#fff7e6] placeholder-[#9c8d73] focus:outline-none focus:border-[#eab95c]"
                 />
                 <button
                   type="submit"
                   disabled={isVerifying}
-                  className="gold-btn px-6 py-2.5 rounded-lg text-sm cursor-pointer disabled:opacity-50"
+                  className="gold-btn px-6 py-2.5 rounded-lg text-sm cursor-pointer disabled:opacity-50 shrink-0"
                 >
                   {isVerifying ? 'Checking...' : 'Verify'}
                 </button>
@@ -190,13 +190,13 @@ export function EmailVerificationView({ compact = false }: { compact?: boolean }
                           setEmailInput(preset.email);
                           void handleVerify(preset.email);
                         }}
-                        className="text-[11px] px-2.5 py-0.5 rounded-md bg-[#1b1711] border border-[#d8a84e]/30 text-[#e4d5b7] hover:border-[#eab95c] hover:text-white transition cursor-pointer"
+                        className="text-[11px] px-2.5 py-1 rounded-md bg-[#1b1711] border border-[#d8a84e]/30 text-[#e4d5b7] hover:border-[#eab95c] hover:text-white transition cursor-pointer"
                       >
                         {preset.label}
                       </button>
                     ))}
                   </div>
-                  <div className="flex items-center justify-between text-[11px] text-[#b9ab90] pt-1">
+                  <div className="flex flex-wrap items-center justify-between gap-1.5 text-[11px] text-[#b9ab90] pt-1">
                     <span>✓ Zero-Log PII Redaction (NFA-39) • Immutable Versioned Record</span>
                     <button
                       type="button"
@@ -211,18 +211,18 @@ export function EmailVerificationView({ compact = false }: { compact?: boolean }
             </div>
 
             {/* Verification Result Card */}
-            <div className="gold-card p-5">
-              <div className="flex items-center justify-between mb-3">
+            <div className="gold-card p-4 sm:p-5">
+              <div className="flex items-center justify-between gap-2 mb-3">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-[#d4c5a9]">
                   Verification Result
                 </h3>
-                <span className="text-[11px] font-mono text-[#c7b99e]">
+                <span className="text-[11px] font-mono text-[#c7b99e] truncate">
                   Model: {currentResult.processing.modelVersion ?? 'deterministic-v1'}
                 </span>
               </div>
 
-              <div className="flex items-center justify-between pb-3.5 mb-3.5 border-b border-[#d8a84e]/20">
-                <span className="text-base sm:text-lg font-bold text-white break-all">
+              <div className="flex flex-wrap items-center justify-between gap-2 pb-3.5 mb-3.5 border-b border-[#d8a84e]/20">
+                <span className="text-sm sm:text-lg font-bold text-white break-all">
                   {currentResult.email}
                 </span>
                 {renderStatusPill(currentResult.displayBadge)}
@@ -274,13 +274,13 @@ export function EmailVerificationView({ compact = false }: { compact?: boolean }
 
               {/* High-Converting Next Best Action Footer */}
               {!compact && (
-                <div className="mt-4 pt-3.5 border-t border-[#d8a84e]/20 flex flex-wrap items-center justify-between gap-2">
+                <div className="mt-4 pt-3.5 border-t border-[#d8a84e]/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
                   <span className="text-xs text-[#d4c5a9]">
                     {currentResult.displayBadge === 'Valid'
                       ? 'Recommended Action: Safe for outbound campaigns & CRM sync.'
                       : 'Recommended Action: Suppress address to protect sender reputation.'}
                   </span>
-                  <div className="flex items-center gap-2">
+                  <div className="grid grid-cols-2 sm:flex items-center gap-2 w-full sm:w-auto shrink-0">
                     {currentResult.displayBadge === 'Valid' ? (
                       <button
                         type="button"
@@ -289,9 +289,9 @@ export function EmailVerificationView({ compact = false }: { compact?: boolean }
                             `Synced "${currentResult.email}" (Valid • ${currentResult.riskScore100}/100) to HubSpot & Salesforce CRM!`
                           )
                         }
-                        className="gold-btn px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer"
+                        className="gold-btn px-3 py-2 sm:py-1.5 rounded-lg text-xs flex items-center justify-center gap-1.5 cursor-pointer"
                       >
-                        <Send className="w-3.5 h-3.5" />
+                        <Send className="w-3.5 h-3.5 shrink-0" />
                         <span>Sync to CRM</span>
                       </button>
                     ) : (
@@ -302,18 +302,18 @@ export function EmailVerificationView({ compact = false }: { compact?: boolean }
                             `Added "${currentResult.email}" (${currentResult.displayBadge}) to Global Suppression List!`
                           )
                         }
-                        className="gold-btn px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer"
+                        className="gold-btn px-3 py-2 sm:py-1.5 rounded-lg text-xs flex items-center justify-center gap-1.5 cursor-pointer"
                       >
-                        <Ban className="w-3.5 h-3.5" />
-                        <span>Suppress Address</span>
+                        <Ban className="w-3.5 h-3.5 shrink-0" />
+                        <span>Suppress</span>
                       </button>
                     )}
                     <button
                       type="button"
                       onClick={() => setActiveTab('Bulk Verification')}
-                      className="gold-btn-outline px-3 py-1.5 rounded-lg text-xs font-medium cursor-pointer"
+                      className="gold-btn-outline px-3 py-2 sm:py-1.5 rounded-lg text-xs font-medium flex items-center justify-center cursor-pointer"
                     >
-                      Bulk Verify Domain
+                      Bulk Verify
                     </button>
                   </div>
                 </div>

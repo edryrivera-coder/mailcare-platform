@@ -2,7 +2,7 @@ import React from 'react';
 
 export function VerificationHeroGraphic() {
   return (
-    <div className="relative flex items-center justify-center w-36 h-24 select-none pointer-events-none">
+    <div className="relative hidden sm:flex items-center justify-center w-32 sm:w-36 h-20 sm:h-24 shrink-0 select-none pointer-events-none">
       <div className="absolute inset-0 rounded-full bg-[#d8a84e]/20 blur-2xl" />
       <svg viewBox="0 0 180 120" className="w-full h-full drop-shadow-[0_0_12px_rgba(235,186,92,0.55)]">
         <defs>
@@ -34,7 +34,7 @@ export function VerificationHeroGraphic() {
 
 export function InboxHeroGraphic() {
   return (
-    <div className="relative flex items-center justify-center w-36 h-24 select-none pointer-events-none">
+    <div className="relative hidden sm:flex items-center justify-center w-32 sm:w-36 h-20 sm:h-24 shrink-0 select-none pointer-events-none">
       <div className="absolute inset-0 rounded-full bg-[#d8a84e]/20 blur-2xl" />
       <svg viewBox="0 0 180 120" className="w-full h-full drop-shadow-[0_0_12px_rgba(235,186,92,0.55)]">
         <defs>
@@ -61,7 +61,7 @@ export function InboxHeroGraphic() {
 
 export function BatchJobsHeroGraphic() {
   return (
-    <div className="relative flex items-center justify-center w-36 h-24 select-none pointer-events-none">
+    <div className="relative hidden sm:flex items-center justify-center w-32 sm:w-36 h-20 sm:h-24 shrink-0 select-none pointer-events-none">
       <div className="absolute inset-0 rounded-full bg-[#d8a84e]/20 blur-2xl" />
       <svg viewBox="0 0 180 120" className="w-full h-full drop-shadow-[0_0_12px_rgba(235,186,92,0.55)]">
         <defs>
@@ -90,7 +90,7 @@ export function BatchJobsHeroGraphic() {
 
 export function AnalyticsHeroGraphic() {
   return (
-    <div className="relative flex items-center justify-center w-36 h-24 select-none pointer-events-none">
+    <div className="relative hidden sm:flex items-center justify-center w-32 sm:w-36 h-20 sm:h-24 shrink-0 select-none pointer-events-none">
       <div className="absolute inset-0 rounded-full bg-[#d8a84e]/20 blur-2xl" />
       <svg viewBox="0 0 180 120" className="w-full h-full drop-shadow-[0_0_12px_rgba(235,186,92,0.55)]">
         <defs>
@@ -116,7 +116,7 @@ export function AnalyticsHeroGraphic() {
 
 export function IntegrationsHeroGraphic() {
   return (
-    <div className="relative flex items-center justify-center w-40 h-24 select-none pointer-events-none">
+    <div className="relative hidden sm:flex items-center justify-center w-36 sm:w-40 h-20 sm:h-24 shrink-0 select-none pointer-events-none">
       <div className="absolute inset-0 rounded-full bg-[#d8a84e]/20 blur-2xl" />
       <svg viewBox="0 0 190 120" className="w-full h-full drop-shadow-[0_0_12px_rgba(235,186,92,0.55)]">
         <defs>
@@ -146,7 +146,7 @@ export function IntegrationsHeroGraphic() {
 
 export function SettingsHeroGraphic() {
   return (
-    <div className="relative flex items-center justify-center w-36 h-24 select-none pointer-events-none">
+    <div className="relative hidden sm:flex items-center justify-center w-32 sm:w-36 h-20 sm:h-24 shrink-0 select-none pointer-events-none">
       <div className="absolute inset-0 rounded-full bg-[#d8a84e]/20 blur-2xl" />
       <svg viewBox="0 0 180 120" className="w-full h-full drop-shadow-[0_0_12px_rgba(235,186,92,0.55)]">
         <defs>

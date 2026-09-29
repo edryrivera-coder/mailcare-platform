@@ -9,3 +9,6 @@ __pycache__/
 .venv/
 .vercel/
 Pasted markdown*.md
+
+.vercel
+.env*

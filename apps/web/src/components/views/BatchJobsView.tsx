@@ -74,12 +74,12 @@ export function BatchJobsView({ compact = false }: { compact?: boolean }) {
   return (
     <div className="space-y-4">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-[#d8a84e]/20">
-        <div>
-          <div className="flex flex-wrap items-center gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-1 border-b border-[#d8a84e]/20">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center justify-between sm:justify-start gap-2.5 sm:gap-3">
             <h1
               className={`${
-                compact ? 'text-xl' : 'text-2xl sm:text-3xl'
+                compact ? 'text-xl' : 'text-xl sm:text-3xl'
               } font-bold text-[#fff8eb] tracking-tight`}
             >
               Batch Jobs
@@ -88,7 +88,7 @@ export function BatchJobsView({ compact = false }: { compact?: boolean }) {
               <button
                 type="button"
                 onClick={() => void handleCreateNewBatchJob()}
-                className="gold-btn px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer"
+                className="gold-btn px-3 sm:px-3.5 py-1.5 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Start New Batch</span>
@@ -100,13 +100,13 @@ export function BatchJobsView({ compact = false }: { compact?: boolean }) {
           </p>
 
           {/* Sub-navigation Tabs */}
-          <div className="flex flex-wrap items-center gap-1 mt-4 p-1 rounded-xl bg-[#12100d] border border-[#d8a84e]/25">
+          <div className="flex items-center gap-1 mt-3 sm:mt-4 p-1 rounded-xl bg-[#12100d] border border-[#d8a84e]/25 overflow-x-auto no-scrollbar max-w-full w-fit">
             {JOB_TABS.map((tab) => (
               <button
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                className={`px-3 sm:px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                   activeTab === tab
                     ? 'gold-tab-active font-semibold'
                     : 'text-[#c7b99e] hover:text-[#fff8eb]'
@@ -121,12 +121,12 @@ export function BatchJobsView({ compact = false }: { compact?: boolean }) {
       </div>
 
       {jobToast && (
-        <div className="px-3.5 py-2 rounded-lg bg-[#194d33]/55 border border-[#28c76f]/50 text-xs text-[#6ce8a0] flex items-center justify-between">
+        <div className="px-3.5 py-2 rounded-lg bg-[#194d33]/55 border border-[#28c76f]/50 text-xs text-[#6ce8a0] flex items-center justify-between gap-2">
           <span>{jobToast}</span>
           <button
             type="button"
             onClick={() => setJobToast(null)}
-            className="text-[#d4c5a9] hover:text-white ml-4 cursor-pointer"
+            className="text-[#d4c5a9] hover:text-white shrink-0 cursor-pointer"
           >
             ✕
           </button>
@@ -134,37 +134,37 @@ export function BatchJobsView({ compact = false }: { compact?: boolean }) {
       )}
 
       {/* 4 KPI Metric Cards Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5">
-        <div className="gold-card p-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5">
+        <div className="gold-card p-3.5 sm:p-4">
           <span className="text-xs text-[#dfd3bc] block">Total Jobs</span>
-          <div className="flex items-end justify-between mt-2">
-            <span className="text-2xl font-extrabold text-white">{242 + jobs.length}</span>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-0.5 mt-2">
+            <span className="text-xl sm:text-2xl font-extrabold text-white">{242 + jobs.length}</span>
             <span className="text-xs font-semibold text-[#28c76f]">↑ 12%</span>
           </div>
         </div>
 
-        <div className="gold-card p-4">
+        <div className="gold-card p-3.5 sm:p-4">
           <span className="text-xs text-[#dfd3bc] block">Running</span>
-          <div className="flex items-end justify-between mt-2">
-            <span className="text-2xl font-extrabold text-white">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-0.5 mt-2">
+            <span className="text-xl sm:text-2xl font-extrabold text-white">
               {21 + jobs.filter((j) => j.status === 'Running').length}
             </span>
             <span className="text-xs font-semibold text-[#28c76f]">Active Workers</span>
           </div>
         </div>
 
-        <div className="gold-card p-4">
+        <div className="gold-card p-3.5 sm:p-4">
           <span className="text-xs text-[#dfd3bc] block">Completed</span>
-          <div className="flex items-end justify-between mt-2">
-            <span className="text-2xl font-extrabold text-white">198</span>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-0.5 mt-2">
+            <span className="text-xl sm:text-2xl font-extrabold text-white">198</span>
             <span className="text-xs font-semibold text-[#28c76f]">99.9% SLA</span>
           </div>
         </div>
 
-        <div className="gold-card p-4">
+        <div className="gold-card p-3.5 sm:p-4">
           <span className="text-xs text-[#dfd3bc] block">Failed (DLQ)</span>
-          <div className="flex items-end justify-between mt-2">
-            <span className="text-2xl font-extrabold text-white">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-0.5 mt-2">
+            <span className="text-xl sm:text-2xl font-extrabold text-white">
               {jobs.filter((j) => j.status === 'Failed').length}
             </span>
             {jobs.some((j) => j.status === 'Failed') ? (
@@ -186,9 +186,70 @@ export function BatchJobsView({ compact = false }: { compact?: boolean }) {
         </div>
       </div>
 
-      {/* Batch Jobs Table Card */}
-      <div className="gold-card p-4">
-        <div className="overflow-x-auto">
+      {/* Batch Jobs Card: Mobile Native Card Stack (< sm) + Desktop Table (sm:+) */}
+      <div className="gold-card p-3 sm:p-4">
+        {/* Mobile Job Cards (< sm) */}
+        <div className="sm:hidden space-y-2.5">
+          {visibleJobs.map((job) => (
+            <div
+              key={`mob-${job.jobId}`}
+              className="gold-card-inset p-3 rounded-xl space-y-2 text-xs"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <span className="font-bold text-[#fff8eb]">{job.jobId}</span>
+                {job.status === 'Running' && (
+                  <span className="inline-flex items-center gap-1.5 text-[#28c76f] font-semibold">
+                    <span className="w-2 h-2 rounded-full bg-[#28c76f] animate-pulse" />
+                    Running
+                  </span>
+                )}
+                {job.status === 'Completed' && (
+                  <span className="inline-flex items-center gap-1.5 text-[#28c76f] font-semibold">
+                    <CheckCircle2 className="w-3.5 h-3.5 text-[#28c76f]" />
+                    Completed
+                  </span>
+                )}
+                {job.status === 'Failed' && (
+                  <span className="inline-flex items-center gap-1.5 text-[#ea5455] font-semibold">
+                    <XCircle className="w-3.5 h-3.5 text-[#ea5455]" />
+                    Failed
+                  </span>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between text-[#dfd3bc]">
+                <span>{job.type}</span>
+                <span className="text-[11px] text-[#c7b99e]">{job.createdRelative}</span>
+              </div>
+
+              <div className="flex items-center gap-2.5">
+                <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-500 ${
+                      job.status === 'Failed'
+                        ? 'bg-[#ea5455]'
+                        : 'bg-gradient-to-r from-[#28c76f] to-[#52e593]'
+                    }`}
+                    style={{ width: `${job.progress}%` }}
+                  />
+                </div>
+                <span className="font-semibold text-[#fff8eb] w-9 text-right">
+                  {job.progress}%
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setSelectedJob(job)}
+                  className="gold-btn-outline px-3 py-1 rounded-lg text-xs font-medium cursor-pointer"
+                >
+                  View
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Tablet & Desktop Table (sm:+) */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead>
               <tr className="border-b border-[#d8a84e]/20 text-[#d4c5a9]">

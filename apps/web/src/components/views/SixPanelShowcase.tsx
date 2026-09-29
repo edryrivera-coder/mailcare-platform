@@ -66,17 +66,17 @@ export function SixPanelShowcase({ onExitShowcase }: { onExitShowcase?: () => vo
         )}
       </div>
 
-      <div className="grid grid-cols-1 2xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 2xl:grid-cols-2 gap-4 sm:gap-6">
         {PANELS.map(({ id, activeRoute, Component }) => (
           <div
             key={id}
-            className="gold-frame rounded-2xl overflow-hidden flex flex-col shadow-[0_20px_50px_rgba(0,0,0,0.85)]"
+            className="gold-frame rounded-xl sm:rounded-2xl overflow-hidden flex flex-col shadow-[0_20px_50px_rgba(0,0,0,0.85)]"
           >
-            <div className="flex flex-1 min-h-[540px]">
-              <Sidebar activeOverride={activeRoute} />
+            <div className="flex flex-1 min-h-[460px] sm:min-h-[540px]">
+              <Sidebar activeOverride={activeRoute} className="hidden md:flex" />
               <div className="flex-1 flex flex-col min-w-0 mailcare-shell-bg">
                 <TopHeader />
-                <div className="p-5 flex-1 overflow-y-auto">
+                <div className="p-3 sm:p-5 flex-1 overflow-y-auto overflow-x-hidden">
                   <Component compact />
                 </div>
               </div>

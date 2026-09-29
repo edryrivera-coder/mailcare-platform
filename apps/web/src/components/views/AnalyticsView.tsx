@@ -157,13 +157,13 @@ export function AnalyticsView({ compact = false }: { compact?: boolean }) {
   return (
     <div className="space-y-4">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-[#d8a84e]/20">
-        <div className="flex-1">
-          <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-1 border-b border-[#d8a84e]/20">
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 sm:gap-3">
             <div>
               <h1
                 className={`${
-                  compact ? 'text-xl' : 'text-2xl sm:text-3xl'
+                  compact ? 'text-xl' : 'text-xl sm:text-3xl'
                 } font-bold text-[#fff8eb] tracking-tight`}
               >
                 Analytics
@@ -182,7 +182,7 @@ export function AnalyticsView({ compact = false }: { compact?: boolean }) {
                       `Executive Analytics Digest (${rangeTab}) sent to ${profile.email} and downloaded as CSV.`
                     )
                   }
-                  className="gold-btn px-3.5 py-2 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer"
+                  className="gold-btn px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs flex items-center gap-1.5 cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5" />
                   <span>Export &amp; Email Report</span>
@@ -192,8 +192,8 @@ export function AnalyticsView({ compact = false }: { compact?: boolean }) {
           </div>
 
           {/* Controls Row: Time range tabs + Date Range Pill */}
-          <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
-            <div className="inline-flex items-center gap-1 p-1 rounded-xl bg-[#12100d] border border-[#d8a84e]/25">
+          <div className="flex flex-wrap items-center justify-between gap-2.5 mt-3 sm:mt-4">
+            <div className="flex items-center gap-1 p-1 rounded-xl bg-[#12100d] border border-[#d8a84e]/25 overflow-x-auto no-scrollbar max-w-full">
               {(['Last 7 days', 'Last 30 days', 'Last 90 days'] as const).map((tab) => (
                 <button
                   key={tab}
@@ -202,7 +202,7 @@ export function AnalyticsView({ compact = false }: { compact?: boolean }) {
                     setRangeTab(tab);
                     setSelectedPointIdx(null);
                   }}
-                  className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                  className={`px-3 sm:px-3.5 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                     rangeTab === tab
                       ? 'gold-tab-active font-semibold'
                       : 'text-[#c7b99e] hover:text-[#fff8eb]'
@@ -214,9 +214,9 @@ export function AnalyticsView({ compact = false }: { compact?: boolean }) {
             </div>
 
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#12100d] border border-[#d8a84e]/30 text-xs text-[#e2d6c1]">
-              <Calendar className="w-3.5 h-3.5 text-[#eab95c]" />
-              <span>{currentDataset.dateLabel}</span>
-              <ChevronDown className="w-3.5 h-3.5 text-[#c7b99e]" />
+              <Calendar className="w-3.5 h-3.5 text-[#eab95c] shrink-0" />
+              <span className="truncate">{currentDataset.dateLabel}</span>
+              <ChevronDown className="w-3.5 h-3.5 text-[#c7b99e] shrink-0" />
             </div>
           </div>
         </div>
@@ -224,15 +224,15 @@ export function AnalyticsView({ compact = false }: { compact?: boolean }) {
       </div>
 
       {reportNotice && (
-        <div className="px-3.5 py-2 rounded-lg bg-[#194d33]/55 border border-[#28c76f]/50 text-xs text-[#6ce8a0] flex items-center justify-between">
+        <div className="px-3.5 py-2 rounded-lg bg-[#194d33]/55 border border-[#28c76f]/50 text-xs text-[#6ce8a0] flex items-center justify-between gap-2">
           <span className="flex items-center gap-2">
-            <MailCheck className="w-4 h-4 text-[#28c76f]" />
+            <MailCheck className="w-4 h-4 text-[#28c76f] shrink-0" />
             <span>{reportNotice}</span>
           </span>
           <button
             type="button"
             onClick={() => setReportNotice(null)}
-            className="text-xs text-[#d4c5a9] hover:text-white ml-3 cursor-pointer"
+            className="text-xs text-[#d4c5a9] hover:text-white shrink-0 cursor-pointer"
           >
             ✕
           </button>
@@ -240,50 +240,50 @@ export function AnalyticsView({ compact = false }: { compact?: boolean }) {
       )}
 
       {/* 4 Reactive KPI Metric Cards Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3.5 tabular-nums">
-        <div className="gold-card p-4">
-          <span className="text-xs text-[#dfd3bc] block">Total Emails Processed</span>
-          <div className="mt-2">
-            <span className="text-xl sm:text-2xl font-extrabold text-white block">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3.5 tabular-nums">
+        <div className="gold-card p-3 sm:p-4">
+          <span className="text-xs text-[#dfd3bc] block truncate">Total Emails Processed</span>
+          <div className="mt-1.5 sm:mt-2">
+            <span className="text-lg sm:text-2xl font-extrabold text-white block leading-tight">
               {currentDataset.totalProcessed}
             </span>
-            <span className="text-xs font-semibold text-[#28c76f] mt-1 inline-block">
+            <span className="text-[11px] sm:text-xs font-semibold text-[#28c76f] mt-1 inline-block">
               {currentDataset.totalDelta}
             </span>
           </div>
         </div>
 
-        <div className="gold-card p-4">
-          <span className="text-xs text-[#dfd3bc] block">Verification Accuracy</span>
-          <div className="mt-2">
-            <span className="text-xl sm:text-2xl font-extrabold text-white block">
+        <div className="gold-card p-3 sm:p-4">
+          <span className="text-xs text-[#dfd3bc] block truncate">Verification Accuracy</span>
+          <div className="mt-1.5 sm:mt-2">
+            <span className="text-lg sm:text-2xl font-extrabold text-white block leading-tight">
               {currentDataset.accuracy}
             </span>
-            <span className="text-xs font-semibold text-[#28c76f] mt-1 inline-block">
+            <span className="text-[11px] sm:text-xs font-semibold text-[#28c76f] mt-1 inline-block">
               {currentDataset.accuracyDelta}
             </span>
           </div>
         </div>
 
-        <div className="gold-card p-4">
-          <span className="text-xs text-[#dfd3bc] block">Active Users</span>
-          <div className="mt-2">
-            <span className="text-xl sm:text-2xl font-extrabold text-white block">
+        <div className="gold-card p-3 sm:p-4">
+          <span className="text-xs text-[#dfd3bc] block truncate">Active Users</span>
+          <div className="mt-1.5 sm:mt-2">
+            <span className="text-lg sm:text-2xl font-extrabold text-white block leading-tight">
               {currentDataset.activeUsers}
             </span>
-            <span className="text-xs font-semibold text-[#28c76f] mt-1 inline-block">
+            <span className="text-[11px] sm:text-xs font-semibold text-[#28c76f] mt-1 inline-block">
               {currentDataset.usersDelta}
             </span>
           </div>
         </div>
 
-        <div className="gold-card p-4">
-          <span className="text-xs text-[#dfd3bc] block">System Uptime</span>
-          <div className="mt-2">
-            <span className="text-xl sm:text-2xl font-extrabold text-white block">
+        <div className="gold-card p-3 sm:p-4">
+          <span className="text-xs text-[#dfd3bc] block truncate">System Uptime</span>
+          <div className="mt-1.5 sm:mt-2">
+            <span className="text-lg sm:text-2xl font-extrabold text-white block leading-tight">
               {currentDataset.uptime}
             </span>
-            <span className="text-xs font-semibold text-[#28c76f] mt-1 inline-block">
+            <span className="text-[11px] sm:text-xs font-semibold text-[#28c76f] mt-1 inline-block">
               {currentDataset.uptimeDelta}
             </span>
           </div>

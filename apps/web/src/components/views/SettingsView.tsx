@@ -406,11 +406,11 @@ export function SettingsView({ compact = false }: { compact?: boolean }) {
   return (
     <div className="space-y-4">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1 border-b border-[#d8a84e]/20">
-        <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pb-1 border-b border-[#d8a84e]/20">
+        <div className="min-w-0">
           <h1
             className={`${
-              compact ? 'text-xl' : 'text-2xl sm:text-3xl'
+              compact ? 'text-xl' : 'text-xl sm:text-3xl'
             } font-bold text-[#fff8eb] tracking-tight`}
           >
             Settings
@@ -420,13 +420,13 @@ export function SettingsView({ compact = false }: { compact?: boolean }) {
           </p>
 
           {/* Sub-navigation Tabs */}
-          <div className="flex flex-wrap items-center gap-1 mt-4 p-1 rounded-xl bg-[#12100d] border border-[#d8a84e]/25">
+          <div className="flex items-center gap-1 mt-3 sm:mt-4 p-1 rounded-xl bg-[#12100d] border border-[#d8a84e]/25 overflow-x-auto no-scrollbar max-w-full w-fit">
             {SETTINGS_TABS.map((tab) => (
               <button
                 key={tab}
                 type="button"
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
+                className={`px-3.5 sm:px-4 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap shrink-0 transition-all cursor-pointer ${
                   activeTab === tab
                     ? 'gold-tab-active font-semibold'
                     : 'text-[#a89b82] hover:text-[#f3e5c8]'
@@ -803,7 +803,7 @@ export function SettingsView({ compact = false }: { compact?: boolean }) {
                 </button>
               </div>
               <div className="space-y-3 text-xs">
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-4">
                   <label className="text-[#c7b99e]">Language</label>
                   <select
                     value={profile.language}
@@ -811,7 +811,7 @@ export function SettingsView({ compact = false }: { compact?: boolean }) {
                       updateProfile({ language: e.target.value });
                       setSavedNotice(`Language preference updated to ${e.target.value}.`);
                     }}
-                    className="gold-card-inset rounded-lg px-3 py-2 text-xs text-[#fff8eb] min-w-[180px] focus:outline-none focus:border-[#eab95c]"
+                    className="gold-card-inset rounded-lg px-3 py-2 text-xs text-[#fff8eb] w-full sm:w-auto sm:min-w-[180px] focus:outline-none focus:border-[#eab95c]"
                   >
                     <option value="English (US)" className="bg-[#12100d]">
                       English (US)
@@ -825,7 +825,7 @@ export function SettingsView({ compact = false }: { compact?: boolean }) {
                   </select>
                 </div>
 
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 sm:gap-4">
                   <label className="text-[#c7b99e]">Time Zone</label>
                   <select
                     value={profile.timeZone}
@@ -833,7 +833,7 @@ export function SettingsView({ compact = false }: { compact?: boolean }) {
                       updateProfile({ timeZone: e.target.value });
                       setSavedNotice(`Time zone updated to ${e.target.value}.`);
                     }}
-                    className="gold-card-inset rounded-lg px-3 py-2 text-xs text-[#fff8eb] min-w-[180px] focus:outline-none focus:border-[#eab95c]"
+                    className="gold-card-inset rounded-lg px-3 py-2 text-xs text-[#fff8eb] w-full sm:w-auto sm:min-w-[180px] focus:outline-none focus:border-[#eab95c]"
                   >
                     <option value="(GMT+08:00) Manila" className="bg-[#12100d]">
                       (GMT+08:00) Manila
@@ -858,11 +858,11 @@ export function SettingsView({ compact = false }: { compact?: boolean }) {
       {activeTab === 'Security' && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {/* Top-Left: 2FA & OAuth KMS Vault */}
-          <div className="lg:col-span-6 gold-card p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Lock className="w-4 h-4 text-[#eab95c]" />
-                <h2 className="text-sm font-bold text-[#fff8eb]">
+          <div className="lg:col-span-6 gold-card p-4 sm:p-5 space-y-4">
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-2 min-w-0">
+                <Lock className="w-4 h-4 text-[#eab95c] shrink-0" />
+                <h2 className="text-xs sm:text-sm font-bold text-[#fff8eb] truncate">
                   Two-Factor Authentication &amp; OAuth KMS Vault
                 </h2>
               </div>
@@ -875,7 +875,7 @@ export function SettingsView({ compact = false }: { compact?: boolean }) {
                     `Two-Factor Authentication ${next2fa ? 'Enabled' : 'Disabled'} for ${profile.email}.`
                   );
                 }}
-                className={`px-3 py-1 rounded-full text-xs font-semibold cursor-pointer ${
+                className={`px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold shrink-0 cursor-pointer ${
                   profile.twoFactorEnabled
                     ? 'bg-[#194d33] text-[#4be38d] border border-[#28c76f]/50'
                     : 'bg-[#4d3819] text-[#ffca6b] border border-[#f5b041]/50'
@@ -914,23 +914,23 @@ export function SettingsView({ compact = false }: { compact?: boolean }) {
               </div>
 
               <div className="gold-card-inset p-3 rounded-xl space-y-1.5">
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-1">
                   <span className="text-[#b9ab90]">Passwordless OAuth Policy (NFA-15)</span>
                   <span className="text-[#28c76f] font-semibold">Strictly Enforced</span>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-1">
                   <span className="text-[#b9ab90]">KMS Refresh Token Encryption (NFA-17)</span>
-                  <span className="font-mono text-[11px] text-[#f5d07e]">
+                  <span className="font-mono text-[11px] text-[#f5d07e] break-all">
                     alias/mailcare-oauth-token-vault
                   </span>
                 </div>
-                <div className="flex items-center justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-1">
                   <span className="text-[#b9ab90]">Transport Security (NFA-16)</span>
                   <span className="text-white font-semibold">TLS 1.3 + Internal mTLS</span>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between pt-1">
+              <div className="flex flex-wrap items-center justify-between gap-2 pt-1">
                 <button
                   type="button"
                   onClick={() => setShowBackupCodes((v) => !v)}

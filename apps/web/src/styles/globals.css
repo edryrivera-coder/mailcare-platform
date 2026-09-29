@@ -19,11 +19,23 @@ html,
 body {
   margin: 0;
   padding: 0;
+  max-width: 100vw;
+  overflow-x: hidden;
   background-color: #060608;
   color: #f4efe6;
   font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Hide scrollbars on horizontal swipeable mobile tab/chip bars */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Enforce tabular numerals on tables and numeric badges to prevent layout shift */

@@ -83,25 +83,33 @@ export function TopHeader({
   }
 
   return (
-    <header className="min-h-14 px-4 sm:px-6 py-2 border-b border-[#d8a84e]/20 flex flex-wrap items-center justify-between gap-3 bg-[#0c0a08]/90 backdrop-blur-md relative z-30">
-      {/* Left: Mobile Drawer Trigger + SLA / Offline Status + Portfolio Privacy Shield + Showcase Toggle */}
-      <div className="flex items-center gap-2">
+    <header className="min-h-13 px-3 sm:px-6 py-2 border-b border-[#d8a84e]/20 flex items-center justify-between gap-2 bg-[#0c0a08]/95 backdrop-blur-md sticky top-0 z-30">
+      {/* Left: Mobile Drawer Trigger + Mobile Brand + SLA / Offline Status + Portfolio Privacy Shield + Showcase Toggle */}
+      <div className="flex items-center gap-1.5 sm:gap-2 min-w-0">
         {onOpenMobileMenu && (
           <button
             type="button"
             onClick={onOpenMobileMenu}
             aria-label="Open navigation menu"
-            className="lg:hidden w-8 h-8 rounded-lg gold-btn-outline flex items-center justify-center text-[#eab95c] cursor-pointer"
+            className="lg:hidden w-8 h-8 rounded-lg gold-btn-outline flex items-center justify-center text-[#eab95c] shrink-0 cursor-pointer"
           >
             <Menu className="w-4 h-4" />
           </button>
         )}
 
+        {/* Mobile Brand Title (< sm) */}
+        <Link
+          href="/dashboard"
+          className="lg:hidden font-extrabold text-sm tracking-tight gold-text-gradient pr-0.5 shrink-0"
+        >
+          MailCare
+        </Link>
+
         <button
           type="button"
           onClick={() => setIsOffline((v) => !v)}
           title="Click to toggle Offline Engine simulation"
-          className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium transition cursor-pointer ${
+          className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-full text-[10.5px] sm:text-[11px] font-medium transition shrink-0 cursor-pointer ${
             isOffline
               ? 'bg-[#4d3819]/80 border border-[#f5b041]/60 text-[#ffca6b]'
               : 'bg-[#194d33]/55 border border-[#28c76f]/45 text-[#6ce8a0]'
@@ -109,13 +117,15 @@ export function TopHeader({
         >
           {isOffline ? (
             <>
-              <WifiOff className="w-3 h-3 text-[#f5b041]" />
-              <span>Offline Mode Active</span>
+              <WifiOff className="w-3 h-3 text-[#f5b041] shrink-0" />
+              <span className="hidden sm:inline">Offline Mode Active</span>
+              <span className="sm:hidden">Offline</span>
             </>
           ) : (
             <>
-              <Wifi className="w-3 h-3 text-[#28c76f]" />
-              <span>99.99% SLA Healthy</span>
+              <Wifi className="w-3 h-3 text-[#28c76f] shrink-0" />
+              <span className="hidden sm:inline">99.99% SLA Healthy</span>
+              <span className="sm:hidden">Online</span>
             </>
           )}
         </button>
@@ -127,7 +137,7 @@ export function TopHeader({
               updateProfile({ portfolioPrivacyMode: !rawProfile.portfolioPrivacyMode })
             }
             title="Toggle Portfolio Safe Mode (masks personal email from public scrapers)"
-            className={`px-2.5 py-1 rounded-full text-[11px] font-medium flex items-center gap-1.5 transition cursor-pointer border ${
+            className={`px-2 sm:px-2.5 py-1 rounded-full text-[10.5px] sm:text-[11px] font-medium flex items-center gap-1 transition shrink-0 cursor-pointer border ${
               rawProfile.portfolioPrivacyMode
                 ? 'bg-[#d8a84e]/15 border-[#eab95c]/50 text-[#f5d07e]'
                 : 'bg-white/5 border-white/15 text-[#d4c5a9]'
@@ -135,15 +145,15 @@ export function TopHeader({
           >
             {rawProfile.portfolioPrivacyMode ? (
               <>
-                <EyeOff className="w-3 h-3 text-[#eab95c]" />
-                <span className="hidden sm:inline">Portfolio Safe (Email Masked)</span>
-                <span className="sm:hidden">Safe Mode</span>
+                <EyeOff className="w-3 h-3 text-[#eab95c] shrink-0" />
+                <span className="hidden md:inline">Portfolio Safe (Email Masked)</span>
+                <span className="md:hidden">Safe</span>
               </>
             ) : (
               <>
-                <Eye className="w-3 h-3 text-[#eab95c]" />
-                <span className="hidden sm:inline">Full Email Visible</span>
-                <span className="sm:hidden">Unmasked</span>
+                <Eye className="w-3 h-3 text-[#eab95c] shrink-0" />
+                <span className="hidden md:inline">Full Email Visible</span>
+                <span className="md:hidden">Unmasked</span>
               </>
             )}
           </button>
@@ -153,12 +163,12 @@ export function TopHeader({
           <button
             type="button"
             onClick={onToggleShowcase}
-            className="gold-btn-outline px-3 py-1 rounded-lg text-xs font-medium flex items-center gap-1.5 cursor-pointer"
+            className="hidden sm:flex gold-btn-outline px-2.5 sm:px-3 py-1 rounded-lg text-xs font-medium items-center gap-1.5 shrink-0 cursor-pointer"
           >
             {showcaseMode ? (
               <>
                 <Maximize2 className="w-3.5 h-3.5 text-[#eab95c]" />
-                <span>Single Screen View</span>
+                <span>Single Screen</span>
               </>
             ) : (
               <>
@@ -250,7 +260,7 @@ export function TopHeader({
       )}
 
       {/* Right: Live Value/Quota Pill + Notifications + Settings + User Profile */}
-      <div className="flex items-center gap-2.5 relative">
+      <div className="flex items-center gap-1.5 sm:gap-2.5 relative shrink-0">
         {onToggleShowcase && (
           <Link
             href="/consumer-inbox"
@@ -275,7 +285,7 @@ export function TopHeader({
         <Link
           href="/settings"
           aria-label="Settings"
-          className="w-8 h-8 rounded-lg hover:bg-white/5 flex items-center justify-center text-[#eab95c] transition"
+          className="hidden sm:flex w-8 h-8 rounded-lg hover:bg-white/5 items-center justify-center text-[#eab95c] transition"
         >
           <Settings className="w-4 h-4" />
         </Link>
@@ -283,9 +293,9 @@ export function TopHeader({
         {/* Profile Pill */}
         <Link
           href="/settings"
-          className="flex items-center gap-2.5 pl-2 pr-2.5 py-1 rounded-full bg-[#16120c] border border-[#d8a84e]/35 hover:border-[#eab95c] transition"
+          className="flex items-center gap-1.5 sm:gap-2.5 pl-1.5 pr-2 sm:pl-2 sm:pr-2.5 py-1 rounded-full bg-[#16120c] border border-[#d8a84e]/35 hover:border-[#eab95c] transition"
         >
-          <div className="w-7 h-7 rounded-full bg-gradient-to-b from-[#f5d07e] to-[#9b6f23] p-[1px] overflow-hidden">
+          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-b from-[#f5d07e] to-[#9b6f23] p-[1px] overflow-hidden shrink-0">
             {profile.avatarDataUrl ? (
               <img
                 src={profile.avatarDataUrl}
@@ -302,13 +312,20 @@ export function TopHeader({
             <div className="text-xs font-semibold text-[#fff8eb]">{profile.fullName}</div>
             <div className="text-[10.5px] text-[#d4c5a9]">{profile.role}</div>
           </div>
-          <ChevronDown className="w-3.5 h-3.5 text-[#d4c5a9]" />
+          <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-[#d4c5a9]" />
         </Link>
 
         {showNotif && (
-          <div className="absolute right-0 top-12 w-80 gold-card p-3.5 z-50 text-xs space-y-2">
-            <div className="font-bold text-[#fff8eb] pb-1.5 border-b border-[#d8a84e]/20">
-              Platform Event Stream (Sec. 24)
+          <div className="fixed sm:absolute left-3 right-3 sm:left-auto sm:right-0 top-14 sm:top-12 sm:w-80 gold-card p-3.5 z-50 text-xs space-y-2 shadow-2xl">
+            <div className="flex items-center justify-between font-bold text-[#fff8eb] pb-1.5 border-b border-[#d8a84e]/20">
+              <span>Platform Event Stream (Sec. 24)</span>
+              <button
+                type="button"
+                onClick={() => setShowNotif(false)}
+                className="text-[#c7b99e] hover:text-white cursor-pointer"
+              >
+                ✕
+              </button>
             </div>
             <div className="text-[#dfd3bc]">
               <span className="text-[#28c76f] font-semibold">● verification.completed:</span> Batch
